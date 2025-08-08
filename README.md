@@ -1,6 +1,4 @@
-# Custom Map Interface
-Version 3
-
+# Custom Map Interface v3
 ## Compatibility 
 This mod was created for OpenMW 0.49.0.
 It might work with other versions, but there are no guarantees.
@@ -39,3 +37,4 @@ This mod is licensed under 0BSD. Feel free to modify and redistribute it however
 ## Support
 If you want me to implement a feature for you, I won't.
 I'm sorry I can't help, but you'll need to do it yourself or get someone else to do it for you.
+
