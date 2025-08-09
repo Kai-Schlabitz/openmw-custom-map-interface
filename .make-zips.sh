@@ -5,12 +5,9 @@ rm -rf .build
 mkdir .build
 
 maps=(0 vvardenfell solstheim mournhold)
-echo $maps
 
 for ext in No DDS TGA; do
-  echo $ext
   folder=.build/CustomMapInterface${ext}Textures
-  echo $folder
   rsync -a --exclude='.*' ./ $folder
 
   if [[ $ext != No ]]; then  
@@ -23,7 +20,6 @@ for ext in No DDS TGA; do
       subs+="s|$before|$after|g;"
     done
 
-    echo $subs
     sed -i -E -e "$subs" $folder/scripts/custom-map-interface.lua
   fi
 
