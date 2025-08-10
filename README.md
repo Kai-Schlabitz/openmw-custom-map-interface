@@ -1,4 +1,4 @@
-# Custom Map Interface v3
+# Custom Map Interface v4
 ## Compatibility 
 This mod was created for OpenMW 0.49.0.
 It might work with other versions, but there are no guarantees.

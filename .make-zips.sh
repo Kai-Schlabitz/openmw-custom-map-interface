@@ -4,18 +4,21 @@ set -e
 rm -rf .build
 mkdir .build
 
-sizes=([vvardenfell]="3531x4096" [solstheim]="1526x1750" [mournhold]="1317x1558")
+maps=(0 vvardenfell solstheim mournhold)
+sizes=(0 3531x4096 1526x1750 1317x1558)
 
 for ext in No DDS TGA; do
-  folder=.build/CustomMapInterface${ext}Textures
+  name=CustomMapInterface${ext}Textures
+  folder=.build/$name
   rsync -a --exclude='.*' ./ $folder
 
   if [[ $ext != No ]]; then  
     cp textures/.${ext,,}/* $folder/textures/
   
     subs=""
-    for map in ${!sizes[@]}; do
-      size=${sizes[$key]}
+    for i in 1 2 3; do
+      map=${maps[i]}
+      size=${sizes[i]}
 
       before="makePathSetting\($i, '[^']*'\)"
       after="makePathSetting($i, '${map}MapWagner.${ext,,}')"
@@ -24,10 +27,12 @@ for ext in No DDS TGA; do
       before="makeTextureSizeSetting\($i, '[^']*'\)"
       after="makeTextureSizeSetting($i, '$size')"
       subs+="s|$before|$after|g;"
+
+      ((i++))
     done
 
     sed -i -E -e "$subs" $folder/scripts/custom-map-interface.lua
   fi
 
-  zip -r $folder $folder
+  cd $folder && zip -r ../$name.zip . && cd ../..
 done
