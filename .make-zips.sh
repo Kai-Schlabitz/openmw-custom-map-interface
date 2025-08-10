@@ -4,7 +4,7 @@ set -e
 rm -rf .build
 mkdir .build
 
-maps=(0 vvardenfell solstheim mournhold)
+sizes=([vvardenfell]="3531x4096" [solstheim]="1526x1750" [mournhold]="1317x1558")
 
 for ext in No DDS TGA; do
   folder=.build/CustomMapInterface${ext}Textures
@@ -14,9 +14,15 @@ for ext in No DDS TGA; do
     cp textures/.${ext,,}/* $folder/textures/
   
     subs=""
-    for i in 1 2 3; do
+    for map in ${!sizes[@]}; do
+      size=${sizes[$key]}
+
       before="makePathSetting\($i, '[^']*'\)"
-      after="makePathSetting($i, 'textures/${maps[$i]}MapWagner.${ext,,}')"
+      after="makePathSetting($i, '${map}MapWagner.${ext,,}')"
+      subs+="s|$before|$after|g;"
+      
+      before="makeTextureSizeSetting\($i, '[^']*'\)"
+      after="makeTextureSizeSetting($i, '$size')"
       subs+="s|$before|$after|g;"
     done
 

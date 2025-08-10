@@ -23,6 +23,20 @@ local function makePathSetting(index, default)
 	}
 end
 
+local function makeTextureSizeSetting(index, default)
+	indexStr = tostring(index)
+	return {
+		key = 'size' .. indexStr,
+		renderer = 'textLine',
+		name = 'Dimensions of Map ' .. indexStr,
+		description = 'The dimensions of the texture for map ' .. indexStr .. '. '
+			.. 'Please input as WidthxHeight. Make sure that there are no spaces, '
+			.. 'the x is lowercase, and the numbers are only digits. Use the '
+			.. 'intrinsic size of the texture.',
+		default = default,
+	}
+end
+
 I.Settings.registerPage {
     key = 'CustomMapInterfacePage',
     l10n = 'CustomMapInterface',
@@ -76,15 +90,24 @@ I.Settings.registerGroup {
             default = 10,
 			argument = {integer = true, min = 1, max = 500},
         },
-		makePathSetting(1, ''),
-		makePathSetting(2, ''),
-		makePathSetting(3, ''),
+		makePathSetting(1, 'vvardenfellMapWagner.tga'),
+		makeTextureSizeSetting(1, '3531x4096'),
+		makePathSetting(2, 'solstheimMapWagner.tga'),
+		makeTextureSizeSetting(2, '1526x1750'),
+		makePathSetting(3, 'mournholdMapWagner.tga'),
+		makeTextureSizeSetting(3, '1317x1558'),
 		makePathSetting(4, ''),
+		makeTextureSizeSetting(4, ''),
 		makePathSetting(5, ''),
+		makeTextureSizeSetting(5, ''),
 		makePathSetting(6, ''),
+		makeTextureSizeSetting(6, ''),
 		makePathSetting(7, ''),
+		makeTextureSizeSetting(7, ''),
 		makePathSetting(8, ''),
+		makeTextureSizeSetting(8, ''),
 		makePathSetting(9, ''),
+		makeTextureSizeSetting(9, ''),
     },
 }
 
@@ -93,8 +116,7 @@ local settingsSection = storage.playerSection('SettingsPlayerCustomMapInterface'
 local mousePosition = vec2(0, 0)
 local mouseOffset = vec2(0, 0)
 local screenSize = ui.screenSize()
-local imageDimension = math.min(screenSize.x, screenSize.y) * 0.9
-local imageSize = vec2(imageDimension, imageDimension)
+local availableScreen = screenSize * 0.9
 local center = screenSize / 2
 
 local currentMapIndex = 1
@@ -113,31 +135,42 @@ local function init()
 	end
 	
 	settings = settingsSection:asTable()
-	invertScroll = settings.invertScroll and -1 or 1
+	invertScroll = settings.invertScroll and -1 or 1	
 	
 	images = {}
 	positions = {}
 	sizes = {}
-	paths = {}
+	paths = {}	
 	
 	for i = 1, 9 do
-		local path = settings['path' .. tostring(i)]
-		if not path or path == "" then goto continue end
+		local strI = tostring(i)
+		local path = 'textures/' .. settings['path' .. strI]
+		local sizeS = settings['size' .. strI]
+		if not (path and sizeS) or path == "" or sizeS == "" then goto continue end
+		local widthS, heightS = string.match(sizeS, "(%d+)x(%d+)")
+		local intrinsicWidth = tonumber(widthS)
+		local intrinsicHeight = tonumber(heightS)
+		if not (intrinsicWidth and intrinsicHeight) then goto continue end
+		local intrinsicSize = vec2(intrinsicWidth, intrinsicHeight)
+
 		paths[i] = path
 		positions[i] = center
-		sizes[i] = imageSize
-
+		
+		local scale = math.min(availableScreen.x / intrinsicWidth, availableScreen.y / intrinsicHeight)
+		sizes[i] = intrinsicSize * scale
+		
 		local image
 		image = ui.create {
 			layer = "Windows",
 			type = ui.TYPE.Image,
 			props = {
 				visible = false,
-				size = imageSize,
+				size = sizes[i],
 				anchor = vec2(0.5, 0.5),
 				position = center,
 				resource = ui.texture {
 					path = path,
+					size = intrinsicSize,
 				},
 			},
 			events = {
