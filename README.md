@@ -26,16 +26,13 @@ map 1. Make sure that the path and size for each map is set in the settings.
   the Wagner maps from https://www.nexusmods.com/morrowind/mods/48455 are
   included with the paths already set up.
 - Set the intrinsic sizes of the textures in the settings page for the mod.
-  Texture files should have square sizes that are powers of 2. Like 1024x1024
-  or 4096x4096. However, not all maps are actually those sizes. The actual size
-  of the map is the intrinsic size. Map assets whose intrinsic dimensions are 
-  not a power of two will have some transparent space on the bottom right. If
-  you do not set this intrinsic size for your custom assets in the settings
-  page, the mod will still work, but the transparent space will be counted
-  toward the total texture size, and the map won't start out centered and at
-  a good size proportional to your screen size. You can also interact with the
-  transparent space even though you shouldn't be able to. The intrinsic sizes
-  are already set up in the settings if you install the TGA or DDS version.
+  Texture files should have square sizes that are powers of 2. Like 1024x1024 or
+  4096x4096. However, not all maps are actually those sizes. The actual size of
+  the map is the intrinsic size. Map assets whose intrinsic dimensions are not a
+  power of two will have some transparent space on the bottom right. Setting the
+  intrinsic size for your custom assets lets the mod ignore the transparent
+  space and is required. The intrinsic sizes for the included maps are already
+  set up in the settings if you install the TGA or DDS version.
 
 ## File credits
 Default map assets from Map and Compass by JaceyS.
@@ -58,4 +55,3 @@ you like.
 ## Support
 If you want me to implement a feature for you, I won't. I'm sorry I can't help,
 but you'll need to do it yourself or get someone else to do it for you.
-
